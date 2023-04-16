@@ -12,7 +12,12 @@ public class HollyWoodApp {
     
     private Vector<LinkedList<T>> arcs;   // adjacency matrices of arcs
     private Vector<T> vertices;   // values of vertices
-
+    private Graph graph;
+    
+    public HollyWoodApp(){
+        graph = new Graph();
+    }
+    
     public void addVertex (T vertex){
         // add it to the vertices vector
         vertices.add(vertex);
@@ -20,7 +25,7 @@ public class HollyWoodApp {
         //indicate that the new vertex has no arcs to other vertices yet
         arcs.add(new LinkedList<T>());
     }
-
+    
     public boolean isArc (T vertex1, T vertex2){
         try {
             int index = vertices.indexOf(vertex1);
@@ -36,10 +41,6 @@ public class HollyWoodApp {
         return (isArc(vertex1, vertex2) && isArc(vertex2, vertex1));
     }
     
-    private Graph graph;
-    public HollyWoodApp(){
-        graph = new Graph();
-    }
     public void addActor(String name){
         graph.addVertex(name);
     }
