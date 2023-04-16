@@ -1,61 +1,36 @@
-package javafoundations;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Vector;
-import java.util.Scanner;
-import java.io.PrintWriter;
-import java.io.File;
-import java.io.IOException;
+/**
+ * Write a description of class HollywoodApp here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class HollywoodApp
+{
 
-public class HollyWoodApp {
-    private Graph graph;
-    public HollyWoodApp(){
-        graph = new Graph();
+    private Vector<LinkedList<T>> arcs;   // adjacency matrices of arcs
+    private Vector<T> vertices;   // values of vertices
+
+    public void addVertex (T vertex){
+        // add it to the vertices vector
+        vertices.add(vertex);
+
+        //indicate that the new vertex has no arcs to other vertices yet
+        arcs.add(new LinkedList<T>());
     }
-    public void addActor(String name){
-        graph.addVertex(name);
-    }
-    public void addMovie(String name){
-        graph.addVertex(name);
-    }
-    public void addEdge(String actor, String movie){
-        graph.addEdge(actor, movie);
-    }
-    public void readFromFile(String fileName) throws IOException{
-        File file = new File(fileName);
-        Scanner inputFile = new Scanner(file);
-        while(inputFile.hasNext()){
-            String line = inputFile.nextLine();
-            String[] tokens = line.split(",");
-            String actor = tokens[0];
-            String movie = tokens[1];
-            addActor(actor);
-            addMovie(movie);
-            addEdge(actor, movie);
+
+    public boolean isArc (T vertex1, T vertex2){
+        try {
+            int index = vertices.indexOf(vertex1);
+            LinkedList<T> l = arcs.get(index);
+            return (l.indexOf(vertex2) != -1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(vertex1 + " vertex does not belong in the graph");
+            return false;
         }
-        inputFile.close();
     }
-    // public static void main(String[] args) throws IOException{
-    //     Scanner scan = new Scanner(System.in);
-    //     System.out.println("Enter the name of the file to read from: ");
-    //     String fileName = scan.nextLine();
-    //     File file = new File(fileName);
-    //     Scanner inputFile = new Scanner(file);
-    //     LinkedList<String> list = new LinkedList<String>();
-    //     while(inputFile.hasNext()){
-    //         String line = inputFile.nextLine();
-    //         list.add(line);
-    //     }
-    //     inputFile.close();
-    //     System.out.println("Enter the name of the file to write to: ");
-    //     String fileName2 = scan.nextLine();
-    //     PrintWriter outputFile = new PrintWriter(fileName2);
-    //     Iterator<String> iter = list.iterator();
-    //     while(iter.hasNext()){
-    //         String line = iter.next();
-    //         outputFile.println(line);
-    //     }
-    //     outputFile.close();
-    //     System.out.println("Done!");
+
+    public boolean isEdge(T vertex1, T vertex2) {
+        return (isArc(vertex1, vertex2) && isArc(vertex2, vertex1));
     }
+}
