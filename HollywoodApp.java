@@ -23,18 +23,34 @@ public class HollyWoodApp {
         graph.addEdge(actor, movie);
     }
     public void readFromFile(String fileName) throws IOException{
-        File file = new File(fileName);
-        Scanner inputFile = new Scanner(file);
-        while(inputFile.hasNext()){
-            String line = inputFile.nextLine();
-            String[] tokens = line.split(",");
-            String actor = tokens[0];
-            String movie = tokens[1];
-            addActor(actor);
-            addMovie(movie);
-            addEdge(actor, movie);
+        BufferedReader reader = new BufferedReader(new FileReader(filename));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith("\"")) {
+                String[] values = line.split("\",\"");
+                if (values.length == 6) {
+                    String movie = values[0].replaceAll("\"", "");
+                    String actor = values[1].replaceAll("\"", "");
+                    String gender = values[5].replaceAll("\"", "");
+                    
+                    Vertex actorVertex = graph.getVertex(actor);
+                    if (actorVertex == null) {
+                        actorVertex = new Vertex(actor);
+                        actorVertex.addAttribute("gender", gender);
+                        graph.addVertex(actorVertex);
+                    }
+                    
+                    Vertex movieVertex = graph.getVertex(movie);
+                    if (movieVertex == null) {
+                        movieVertex = new Vertex(movie);
+                        graph.addVertex(movieVertex);
+                    }
+                    
+                    graph.addEdge(actorVertex, movieVertex);
+                }
+            }
         }
-        inputFile.close();
+        reader.close();
     }
     // public static void main(String[] args) throws IOException{
     //     Scanner scan = new Scanner(System.in);
