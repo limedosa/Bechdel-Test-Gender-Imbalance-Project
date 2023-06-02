@@ -1,8 +1,6 @@
 import javafoundations.AdjListsGraph;
 import java.util.Hashtable;
-import java.util.Vector;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.Set;
 import java.io.File;
@@ -22,13 +20,7 @@ import java.util.*;
  * representation of the graph, and get a list of the
  * movies that have over 48% women in its cast.
  * 
- * People we consulted with:
- * We went to Angel Cooper's office hours, emailed
- * the CS230 instructors and got replied by Takis Metaxas
- * and Smaranda Sandu. Thank you so much for your
- * instructions and guidance!
- * 
- * @author (Ashley (as126), Linda (ld104), Agnes (yq100))
+ * @author (Linda, and collaborators)
  * @version (04/16/2023)
  */
 public class HollywoodApp {
@@ -189,24 +181,7 @@ public class HollywoodApp {
             double bechdelValue = (double) femaleCount
                     / actorsInMovie.get(m).size();
 
-            /*
-             * We calculated the percentage of female actors
-             * in the movie using
-             * (number of female actors)/(number of male
-             * actors + number of unknown actors)
-             * because we think the project is trying to find
-             * whether there are over 48% women in the cast.
-             * Ultimately, the lack of female representation
-             * on screen is an integral layer of the gender
-             * imbalance in the movie industry that we need
-             * to take account of. Therefore, if a character
-             * is not identifiably female, it contributes to
-             * the absence of female representation in movies.
-             * For this reason, we believe actors with gender
-             * "unknown" should be included in the denominator
-             * while calculating the percentage of female
-             * actors in movies.
-             */
+            
             if (bechdelValue >= 0.48) {
                 passedTest += "\t" + m + " - Bechdel Value "
                         + bechdelValue + "\n";
@@ -281,7 +256,8 @@ public class HollywoodApp {
         while ((line = br.readLine()) != null) {
             String[] tokens = line.split(",");
             if (tokens.length != 6) {
-                continue; // skip line if it doesn't have 6 parts separated by commas bc of data structure
+                continue; // skip line if it doesn't have 6 parts separated by commas bc of
+                // data structure
             }
             String movie = tokens[0].replaceAll("\"", "");
             String actor = tokens[1].replaceAll("\"", "");
@@ -326,44 +302,109 @@ public class HollywoodApp {
                 return currSeparation - 1;
             }
         }
-
         return -1; // return this if actors aren't connected
     }
 
-    /**
-     * The main() method provides basic testing for the
-     * methods above.
-     * 
-     * @throws IOException
-     */
+    public static List<String> findMoviePath(String actor1, String actor2, String fileName) throws IOException {
+        // Create maps and sets to store the movie to actors and actor to separation
+        // relationships
+        Map<String, Set<String>> movieToActors = new HashMap<>();
+        Map<String, Integer> actorToSeparation = new HashMap<>();
+        Map<String, String> actorToPrevMovie = new HashMap<>();
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        // Read the file and create movie to actors relationships
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] tokens = line.split(",");
+            if (tokens.length != 6) {
+                continue; // skip line if it doesn't have 6 parts separated by commas bc of data structure
+            }
+            String movie = tokens[0].replaceAll("\"", "");
+            String actor = tokens[1].replaceAll("\"", "");
+            Set<String> movieActors = movieToActors.computeIfAbsent(movie, k -> new HashSet<>());
+            movieActors.add(actor);
+            if (!actorToSeparation.containsKey(actor)) {
+                actorToSeparation.put(actor, Integer.MAX_VALUE);
+            }
+        }
+        br.close();
+
+        // BFS to find degree of separation
+        actorToSeparation.put(actor1, 0);
+        queue.offer(actor1);
+        visited.add(actor1); // Marking the starting actor as visited
+        while (!queue.isEmpty()) {
+            String currActor = queue.poll();
+            int currSeparation = actorToSeparation.get(currActor);
+
+            Set<String> currMovies = new HashSet<>();
+            // Find movies that contain the current actor
+            for (String movie : movieToActors.keySet()) {
+                Set<String> actorsInMovie = movieToActors.get(movie);
+                if (actorsInMovie.contains(currActor)) {
+                    currMovies.add(movie);
+                }
+            }
+
+            // Find actors in the movies and add them to the queue
+            for (String movie : currMovies) {
+                Set<String> actorsInMovie = movieToActors.get(movie);
+                for (String actor : actorsInMovie) {
+                    if (!visited.contains(actor)) {
+                        actorToSeparation.put(actor, currSeparation + 1);
+                        visited.add(actor);
+                        queue.offer(actor);
+                        actorToPrevMovie.put(actor, movie); // Keep track of the previous movie
+                    }
+                }
+            }
+
+            // If the current actor is the second actor, we have found the path
+            if (currActor.equals(actor2)) {
+                List<String> path = new ArrayList<>();
+                path.add(actor2); // Add the second actor to the path
+                String prevActor = actorToPrevMovie.get(actor2);
+                while (prevActor != null) { // Traverse the path from actor2 to actor1
+                    path.add(prevActor);
+                    prevActor = actorToPrevMovie.get(prevActor);
+                }
+                Collections.reverse(path); // Reverse the path to go from actor1 to actor2
+                return path;
+            }
+        }
+
+        return Collections.emptyList(); // return an empty list if actors aren't connected
+    }
+
     public static void main(String[] args) throws IOException {
-        // HollywoodApp ha = new HollywoodApp();
-        // ha.createGraphFromFile("data/nextBechdel_castGender.txt");
-        // System.out.println(ha);
-        // System.out.println(ha.actorToGender);
-        // ha.saveIntoTGF("out1.tgf");
-        // System.out.println(ha.findPassedTest());
-        // ha.bechdelTestingToFile("bechdelProject_testing.txt");
-        // HollywoodApp app = new HollywoodApp();
-        // app.createGraphFromFile("bechdelProject_testing.txt");
-        // LinkedList<String> movies = app.moviesOfActor("Jennifer Lawrence");
-        // System.out.println(movies);
-        HollywoodApp app = new HollywoodApp();
-        app.createGraphFromFile("bechdelProject_testing.txt");
+        String fileName = "data/nextBechdel_castGender.txt";
+
+        // Test case 1
         String actor1 = "Megan Fox";
         String actor2 = "Tyler Perry";
-        int degreeOfSeparation = HollywoodApp.findDegreeOfSeparation(actor1, actor2,
-        "bechdelProject_testing.txt");
-        System.out.println("Degree of separation between " + actor1 + " and " +
-        actor2 + ": " + degreeOfSeparation);
+        int degreeOfSeparation = findDegreeOfSeparation(actor1, actor2, fileName);
+        System.out
+                .println("The degrees of separation between " + actor1 + " and " + actor2 +
+                        ": " + degreeOfSeparation);
+        if (degreeOfSeparation != -1) {
+            System.out.println("The path taken: " + findMoviePath(actor1, actor2,
+                    fileName));
+        }
 
-        actor1 = "Nick Arapoglou";
-        actor2 = "Tyler Perry";
-        degreeOfSeparation = HollywoodApp.findDegreeOfSeparation(actor1, actor2,
-        "bechdelProject_testing.txt");
-        System.out.println("Degree of separation between " + actor1 + " and " +
-        actor2 + ": " + degreeOfSeparation);
-
+        // Test case 2
+        String actor3 = "Nick Arapoglou";
+        String actor4 = "Tyler Perry";
+        degreeOfSeparation = findDegreeOfSeparation(actor3, actor4, fileName);
+        System.out
+                .println("The degrees of separation between " + actor3 + " and " + actor4 +
+                        ": " + degreeOfSeparation);
+        if (degreeOfSeparation != -1) {
+            System.out.println("The path taken: " + findMoviePath(actor1, actor2,
+                    fileName));
+        }
 
     }
 
