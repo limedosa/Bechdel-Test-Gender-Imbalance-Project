@@ -1,0 +1,82 @@
+Gender Imbalance 
+in a Movies Graph
+CS230 -Spring 2023 PROJECT
+Introduction
+In this group project you will investigate real-world data, which will be represented using several data structures. The data you will explore examines gender imbalance in a set of 50 Hollywood movies through a series of quantitative tests designed by women in the film industry. 
+For example, the original Bechdel Test asks two simple questions of a movie: 
+Does it have at least two named female characters? 
+Do those characters have at least one conversation that is not about a man? 
+A surprisingly high number of movies fail this test. As another example, the Uphold Test asks whether the on-set crew is at least 50 percent women.
+The goal of this project is to demonstrate how a variety of data structures can be used to investigate questions about a particular real-world domain. 
+
+Background
+Background information about the data used in this project can be found in the FiveThirtyEight article Creating the New Bechdel Test. 
+Read this article carefully before downloading the data and starting to work on this project.
+
+
+The original data set for this project consists of three .txt files. These files are described on FiveThirtyEight Github repository. 
+Read the description carefully, however do not download the files from Github. You will work with cleaned up versions of two of these files. 
+
+
+Logistics
+This is a group project. You should work in a group of 3 people. Teams are defined in this document.
+
+Submit to Gradescope your work no later than the date and time marked on the course syllabus:
+your java code (one submission per team), neatly documented. As always, make sure you include javadoc documentation (top-of-file, top-of-method), and author and version information,  as well as appropriate-level in-line comments for each code file. 
+Your audience here is your CS230 instructors. 
+your testing results from tasks 1 and 2, saved in a file named “bechdelProject_testing.txt” (one copy per team) 
+Your audience here is your CS230 instructors. 
+your written report  (see below) in pdf format (one submission per team).
+Finally, each student should submit an individual Project Cover Page after the final version of the project is uploaded onto Gradescope. Without submitting the cover page, a student will not receive credit.
+
+
+Your project report (in pdf format, saved to include your 3 last names alphabetically, e.g., “A_B_C_FinalProject.pdf” if your last names are A, B, C) should contain the following sections (note that it does not include code nor testing files):
+
+Title of your project and the names of the team members. Thank the people who helped you. Give credit where credit is due. 
+Introduction: describe the problem you examined in this project. Make sure to cite any references. 
+Your audience for this section is any Wellesley student who may not know about the problem you investigated.
+Method: in a more technical way, describe –succinctly but also accurately– your solution. Describe your implementation of the HollywoodApp class, and explain the design choices you made. Include your answer to Task 1.2 here, as well as the picture you generated in that task. 
+Your audience in this section is any CS230 student.
+Collaboration: describe in detail how the work was divided and executed among the team members. Note, that teamwork is critical in computing disciplines but could be challenging. We will read your team collaboration document and personal cover page statements carefully and in some cases will assign different individual grades to team members based on their contributions. 
+Your audience here is your CS230 instructors. 
+
+Failing to submit the required material in the format specified will result in receiving no project credit for the whole team or an individual (depending on the situation).
+
+
+The Tasks
+As we have seen many times in class, one of the powerful aspects of ADTs is that a data structure, and in particular one implementation of it, can be used and reused in different applications. In this project, you will use specific implementations of some of the ADTs you learned in this course to load and analyze the provided data set on some Hollywood movies. 
+
+In the following tasks, you will implement four different classes, as well as answer some research questions related to the data set on these movies. 
+Task 0: Study your data. Think of what you need to do.
+Download the data files.Take a look at your data files and familiarize yourself with the contents. Pay attention to the headers in the files describing the fields. Do not proceed without having understood what your data files contain.
+
+For the purposes of testing, we are also providing you with two very small files formatted exactly like the original data files. Use these small files to start your testing before moving on to testing with the complete data files. Feel free to generate other testing files of your own (of the same format). 
+
+To help you implement your project in only two weeks we have provided some specifications and have broken down the process in a series of tasks. Your design needs to follow the OOP principles we have learned this semester, but you are free to develop your own methods inside the classes if they make more sense to you. As always, make sure you test your code and you have evidence that it is working correctly.
+Task 1 - Define HollywoodApp
+Your program will implement the HollywoodApp class. Feel free to add constructors, setters and getters, and helper methods as you deem necessary. As always, your code is expected to be thoroughly tested and well documented.
+
+This class will use an undirected graph G with vertices representing movie names and actor names. Edges will reflect the relationship “played in the movie”. Every actor A that, according to the data, played in a movie M will result in an edge (A,M). This class reads data to populate the graph from a file formatted like the file "nextBechdel_castGender.txt". Take a look at this file to see what it contains. Draw on paper a few of these vertices and edges so that you can see what the graph looks like.
+
+Note that G is a bipartite graph: you can imagine all the movie titles drawn on the left-hand side, and all the actor names drawn on the right-hand side. Edges connect vertices from one side to the other. There are no edges between vertices on the left-hand side (since a movie can not play in another movie), and there are no edges among the vertices on the right-hand side.
+
+Please note that in this task you will work with an undirected graph, which is different from the directed graphs you have worked with in lectures and labs. You will need to study the Graph interface (for undirected Graphs) that we have provided for you in the folder javafoundations. Become familiar with the methods available to you. You need to do so before you start working with that graph.
+
+
+Task 1.1. Implement HollywoodApp class. Start your testing by testing on the small test files included in the “data” folder, and then on the files with the real data. You are free to make your own design decisions for this class, including constructor, instance methods, any helper methods, etc. However, your implementation needs to respect object-oriented programming principles, as we’ve learned in the course. You will be evaluated on whether your implementation accurately and appropriately employs these principles. 
+
+Task 1.2. Save the graph you generate using the information in "nextBechdel_castGender.txt" as a .tgf file. Open this file in yEd and visualize it using the Organic layout. Save the image as a .png or .jpg and include it in the files you submit for this project. In a few sentences in your report describe the graph you obtained. What do you notice? What do you wonder? 
+
+Task 1.3. As you saw in the article you read for this project, these movies have test results associated with them. You can now answer the following question: 
+Using the information from a file formatted like "nextBechdel_castGender.txt", generate, for each movie, a new Bechdel-like value that captures whether the movie has over 48% women in its cast. Find all movies in "nextBechdel_castGender.txt" that do have over 48% women in the cast. Include the results of in “bechdelProject_testing.txt”.
+You are free to implement this however you wish. Namely, you are free to edit previous methods or create new methods. 
+
+HINT: The two files nextBechdel_castGender.txt and small_castGender.txt were created on different operating systems. It turns out that the last line character in one of them is \r while in the other is \n. Depending on your approach, this information might be useful or not relevant. We are including this fact here so that you can consider this issue (which happens all the time when we’re dealing with real-world data!) in your debugging. We strongly recommend using the debugger. 
+Task 2 - Distances between Actors in Movies. 
+Now that you have implemented the HollywoodApp class, use it to answer the following questions:
+Given an actor, what is the list of movies that actor has played in? Write a method to answer this question, and test this method thoroughly. Include the results of calling this method on the actor “Jennifer Lawrence” in “bechdelProject_testing.txt”.
+Given a movie, what is the list of all actors who have played in that movie? Write a method to answer this question, and test this method thoroughly. Include the results of calling this method on the movie “The Jungle Book” in “bechdelProject_testing.txt”.
+(In this subtask we want your team to really lean into your creativity. There’s multiple solutions and we are excited to see what you come up with. In order to make that happen, for this task only, you cannot consult the TAs or the instructors for questions.) 
+Given two actors a1 and a2, what is the degree of separation between them? (i.e. what is the number of movies that separate these actors?) For example, if the actors have played in a movie together, this number would be 0. If the actors have not played in a movie together, but a1 played in a movie m1 with another actor a, who then played in a movie m2 with a2, then this number would be 1. Write a method to answer this question, and test this method thoroughly. Include the results of calling this method on the actors “Megan Fox” and “Tyler Perry” in “bechdelProject_testing.txt”,  and on the actors “Nick Arapoglou” and “Tyler Perry”  in “bechdelProject_testing.txt”.
+
+Make sure to print the answers to the previous questions in a readable but also informative way.
