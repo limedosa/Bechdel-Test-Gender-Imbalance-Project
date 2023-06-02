@@ -20,7 +20,7 @@ import java.util.*;
  * representation of the graph, and get a list of the
  * movies that have over 48% women in its cast.
  * 
- * @author (Linda, and collaborators)
+ * @author (Linda, Ashley, Agnes)
  * @version (04/16/2023)
  */
 public class HollywoodApp {
